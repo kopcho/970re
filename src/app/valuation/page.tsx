@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import AddressAutocomplete from "@/components/AddressAutocomplete";
 
 export default function ValuationPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "" });
@@ -58,7 +59,7 @@ export default function ValuationPage() {
             <input style={inputStyle} type="text" name="name" placeholder="Your name" value={form.name} onChange={handleChange} required />
             <input style={inputStyle} type="email" name="email" placeholder="Email address" value={form.email} onChange={handleChange} required />
             <input style={inputStyle} type="tel" name="phone" placeholder="Phone number" value={form.phone} onChange={handleChange} />
-            <input style={inputStyle} type="text" name="address" placeholder="Property address" value={form.address} onChange={handleChange} required />
+            <AddressAutocomplete value={form.address} onChange={(v) => setForm(f => ({ ...f, address: v }))} style={inputStyle} required />
             {status === "error" && (
               <p style={{ color: "var(--orange-dark)", marginBottom: "1rem", fontSize: "0.9rem" }}>Something went wrong — please try again or call Rich at (970) 669-8677.</p>
             )}
