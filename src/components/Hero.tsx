@@ -36,10 +36,10 @@ export default function Hero() {
 
             <div className="area-stats">
               {[
-                { num: "$485K", label: "Median Sale Price\nLarimer County" },
-                { num: "18",    label: "Avg Days\non Market" },
-                { num: "97%",   label: "List-to-Sale\nPrice Ratio" },
-                { num: "340+",  label: "Active Listings\nNoCo Region" },
+                { num: "$549K",   label: "Median Sale Price\nLarimer County" },
+                { num: "18",     label: "Avg Days\non Market" },
+                { num: "99%",    label: "List-to-Sale\nPrice Ratio" },
+                { num: "2,700+", label: "Active Listings\nNoCo Region" },
               ].map((stat, i) => (
                 <div key={i} className="stat">
                   <div className="stat-num">{stat.num}</div>
