@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, DM_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
+import Nav from "@/components/Nav";
 import TalkToRich from "@/components/TalkToRich";
 
 const fraunces = Fraunces({
@@ -112,6 +113,7 @@ export default function RootLayout({
       <body
         className={`${fraunces.variable} ${dmMono.variable} ${dmSans.variable} antialiased`}
       >
+        <Nav />
         {children}
         <TalkToRich />
       </body>

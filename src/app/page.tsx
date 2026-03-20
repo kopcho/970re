@@ -1,4 +1,3 @@
-import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import SearchBar from "@/components/SearchBar";
 import ListingsGrid from "@/components/ListingsGrid";
@@ -161,7 +160,6 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Nav />
       <Hero />
       <SearchBar />
       <ListingsGrid listings={listings} />
