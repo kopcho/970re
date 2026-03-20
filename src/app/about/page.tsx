@@ -70,13 +70,16 @@ export default function AboutPage() {
           }}
         >
           <p style={{ marginBottom: "1.5rem" }}>
-            Rich Kopcho has spent 50 years in Northern Colorado.
+            I&apos;ve called Northern Colorado home for 50 years. I&apos;ve watched Loveland grow from a quiet agricultural town into one of the most desirable communities on the Front Range — and I&apos;ve seen every market cycle, every neighborhood shift, and every hidden gem along the way.
           </p>
           <p style={{ marginBottom: "1.5rem" }}>
-            As a broker with Better Homes &amp; Gardens Real Estate Neuhaus, Rich brings a combination of deep local knowledge and modern technology to every transaction. That means knowing which streets flood in spring, where the hidden gems are before they hit the market, and what a home is actually worth — not just what an algorithm says.
+            That&apos;s what I bring to every transaction. Not just the data — anyone can pull the data — but the context behind it. Which streets flood in a wet spring. Where the values are quietly climbing before the listings reflect it. What the 970 actually feels like to live in, raise a family in, grow a business in.
+          </p>
+          <p style={{ marginBottom: "1.5rem" }}>
+            Over the years I&apos;ve built multiple businesses, worked alongside major employers in the region, and learned how decisions — financial, strategic, personal — actually get made. Real estate is where all of that comes together.
           </p>
           <p style={{ marginBottom: "2.5rem" }}>
-            Whether you&apos;re buying your first home, selling a long-held property, or building an investment portfolio in NoCo, Rich is the guide you want in your corner.
+            I&apos;m a licensed broker with Better Homes &amp; Gardens Real Estate — Neuhaus in Loveland. If you&apos;re buying, selling, or just trying to understand this market — let&apos;s talk.
           </p>
         </div>
 
