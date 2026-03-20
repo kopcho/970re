@@ -1,19 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function TalkToRich() {
   const [hovered, setHovered] = useState(false);
+  const [href, setHref] = useState("/contact");
+
+  useEffect(() => {
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    setHref(isMobile ? "tel:+19706698677" : "/contact");
+  }, []);
 
   return (
     <>
       <Link
-        href="sms:+19706698677"
+        href={href}
         className="talk-to-rich-btn"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        aria-label="Call Rich Kopcho, Northern Colorado real estate broker"
+        aria-label="Talk to Rich Kopcho, Northern Colorado real estate broker"
         style={{
           background: hovered ? "var(--orange-dark)" : "var(--orange)",
         }}
