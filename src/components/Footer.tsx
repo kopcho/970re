@@ -31,7 +31,7 @@ export default function Footer() {
         }}
       >
         © 2025 970.re · Rich Kopcho, Broker<br />
-        Better Homes &amp; Gardens Real Estate Neuhaus · Loveland, CO
+        Better Homes &amp; Gardens Real Estate — Neuhaus · Loveland, CO
       </div>
 
       <div

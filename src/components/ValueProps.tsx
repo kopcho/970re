@@ -19,7 +19,7 @@ const valueCards = [
   {
     icon: "🤝",
     title: "Full Service",
-    text: "Buy, sell, invest. BHGRE Neuhaus-backed with everything you need under one roof.",
+    text: "Buy, sell, invest. BHGRE — Neuhaus-backed with everything you need under one roof.",
   },
 ];
 

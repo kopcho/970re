@@ -17,10 +17,10 @@ const jsonLd = {
       "url": "https://970.re",
       "telephone": "+1-970-669-8677",
       "description":
-        "Rich Kopcho, Colorado licensed real estate broker with 50 years of Northern Colorado experience. Affiliated with Better Homes & Gardens Real Estate Neuhaus.",
+        "Rich Kopcho, Colorado licensed real estate broker with 50 years of Northern Colorado experience. Affiliated with Better Homes & Gardens Real Estate — Neuhaus.",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Better Homes & Gardens Real Estate Neuhaus",
+        "streetAddress": "Better Homes & Gardens Real Estate — Neuhaus",
         "addressLocality": "Loveland",
         "addressRegion": "CO",
         "postalCode": "80538",
@@ -49,7 +49,7 @@ const jsonLd = {
       "hasCredential": "Colorado Licensed Real Estate Broker",
       "memberOf": {
         "@type": "Organization",
-        "name": "Better Homes & Gardens Real Estate Neuhaus",
+        "name": "Better Homes & Gardens Real Estate — Neuhaus",
       },
       "sameAs": ["https://970.re"],
     },
@@ -77,7 +77,7 @@ const jsonLd = {
           "name": "Who is Rich Kopcho?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Rich Kopcho is a Colorado licensed real estate broker with 50 years of experience in Northern Colorado. He is affiliated with Better Homes & Gardens Real Estate Neuhaus in Loveland, CO.",
+            "text": "Rich Kopcho is a Colorado licensed real estate broker with 50 years of experience in Northern Colorado. He is affiliated with Better Homes & Gardens Real Estate — Neuhaus in Loveland, CO.",
           },
         },
         {

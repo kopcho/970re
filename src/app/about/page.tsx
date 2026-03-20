@@ -16,7 +16,7 @@ export default function AboutPage() {
       <div style={{ maxWidth: "680px", width: "100%" }}>
         <Image
           src="/images/rich-kopcho.jpg"
-          alt="Rich Kopcho, Broker — Better Homes & Gardens Real Estate Neuhaus, Loveland CO"
+          alt="Rich Kopcho, Broker — Better Homes & Gardens Real Estate — Neuhaus, Loveland CO"
           width={680}
           height={400}
           style={{
@@ -76,7 +76,7 @@ export default function AboutPage() {
             opacity: 0.85,
           }}
         >
-          Broker · Better Homes &amp; Gardens Real Estate Neuhaus
+          Broker · Better Homes &amp; Gardens Real Estate — Neuhaus
         </p>
 
         <div

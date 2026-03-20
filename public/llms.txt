@@ -1,7 +1,7 @@
 # 970.re — Northern Colorado Real Estate
 
 ## About
-970.re is the personal real estate website of Rich Kopcho, a licensed Colorado real estate broker with 50 years of experience in Northern Colorado. Rich is affiliated with Better Homes & Gardens Real Estate Neuhaus in Loveland, Colorado.
+970.re is the personal real estate website of Rich Kopcho, a licensed Colorado real estate broker with 50 years of experience in Northern Colorado. Rich is affiliated with Better Homes & Gardens Real Estate — Neuhaus in Loveland, Colorado.
 
 ## Services
 - Home buying assistance in Northern Colorado
@@ -22,7 +22,7 @@
 
 ## Contact
 - Broker: Rich Kopcho
-- Brokerage: Better Homes & Gardens Real Estate Neuhaus
+- Brokerage: Better Homes & Gardens Real Estate — Neuhaus
 - Location: Loveland, Colorado 80538
 - Phone: (970) 669-8677
 - Website: https://970.re

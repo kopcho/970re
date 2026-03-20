@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     default: "970.re — Know the 970. | Northern Colorado Real Estate",
   },
   description:
-    "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code. Better Homes & Gardens Real Estate Neuhaus.",
+    "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code. Better Homes & Gardens Real Estate — Neuhaus.",
   keywords: [
     "Northern Colorado real estate",
     "Fort Collins homes for sale",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     "Timnath real estate",
     "Larimer County homes",
     "970 area code",
-    "BHGRE Neuhaus",
+    "BHGRE — Neuhaus",
     "Rich Kopcho broker",
   ],
   alternates: {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "970.re — Know the 970. | Northern Colorado Real Estate",
     description:
-      "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code. Better Homes & Gardens Real Estate Neuhaus.",
+      "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code. Better Homes & Gardens Real Estate — Neuhaus.",
     url: "https://970.re",
     siteName: "970.re",
     type: "website",
