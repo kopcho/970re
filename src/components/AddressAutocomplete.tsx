@@ -81,9 +81,39 @@ export default function AddressAutocomplete({ value, onChange, onValidated, styl
         </p>
       )}
       {notFound && (
-        <p style={{ fontSize: "0.85rem", color: "var(--orange-dark)", marginTop: "0.4rem" }}>
-          ⚠ Address not found — please double-check before submitting.
-        </p>
+        <div style={{
+          marginTop: "0.5rem",
+          padding: "0.75rem 1rem",
+          background: "#fff8f5",
+          border: "1.5px solid var(--orange)",
+          borderRadius: "2px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}>
+          <span style={{ fontSize: "0.875rem", color: "var(--orange-dark)" }}>
+            ⚠ Couldn&apos;t verify — is this address correct?
+          </span>
+          <button
+            type="button"
+            onClick={() => { setNotFound(false); onValidated?.(true); }}
+            style={{
+              background: "var(--orange)",
+              color: "#fff",
+              border: "none",
+              padding: "0.35rem 0.85rem",
+              borderRadius: "2px",
+              fontSize: "0.8rem",
+              fontFamily: "var(--font-dm-sans), sans-serif",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Yes, it&apos;s correct
+          </button>
+        </div>
       )}
       {suggestion && (
         <div style={{
