@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>970.re — Know the 970.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green:       #339933;
+      --green-dark:  #1a4d1a;
+      --green-deep:  #0f2e0f;
+      --green-light: #f0f7f0;
+      --green-mid:   #e0f0e0;
+      --orange:      #ff6b35;
+      --orange-dark: #e0541e;
+      --neutral:     #2d2d2d;
+      --white:       #fafdf9;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--neutral);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(250,253,249,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(51,153,51,0.15);
+    }
+
+    .wordmark {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.6rem;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      text-decoration: none;
+      color: var(--green-dark);
+      line-height: 1;
+    }
+    .wordmark span { color: var(--green); }
+
+    .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--neutral);
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    .nav-cta {
+      background: var(--orange) !important;
+      color: #fff !important;
+      padding: 0.6rem 1.4rem;
+      border-radius: 2px;
+      font-weight: 500;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--orange-dark) !important; color: #fff !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 50%, rgba(51,153,51,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(26,77,26,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* subtle topographic lines */
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 59px,
+        rgba(51,153,51,0.04) 60px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 59px,
+        rgba(51,153,51,0.04) 60px
+      );
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 4rem 6rem 5rem;
+      position: relative; z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(3rem, 5vw, 5rem);
+      font-weight: 900;
+      line-height: 1.0;
+      color: var(--green-deep);
+      margin-bottom: 0.25rem;
+    }
+    .hero-headline em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--green);
+    }
+
+    .hero-tagline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--green-dark);
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #4a5a4a;
+      max-width: 420px;
+      margin-bottom: 3rem;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      padding: 1rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      border-radius: 2px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--green-dark);
+      border: 1.5px solid var(--green);
+      padding: 1rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 2px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { background: var(--green); color: #fff; }
+
+    /* hero right — area map visual */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 4rem;
+      position: relative; z-index: 1;
+    }
+
+    .area-card {
+      background: var(--green-deep);
+      border-radius: 4px;
+      padding: 2.5rem;
+      width: 100%; max-width: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+    .area-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 30%, rgba(51,153,51,0.2) 0%, transparent 60%);
+    }
+
+    .area-card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .area-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      position: relative;
+    }
+
+    .stat {
+      border-left: 2px solid var(--green);
+      padding-left: 1rem;
+    }
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 0.25rem;
+      line-height: 1.3;
+    }
+
+    .area-cities {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+      position: relative;
+    }
+
+    .city-pill {
+      background: rgba(51,153,51,0.2);
+      border: 1px solid rgba(51,153,51,0.4);
+      color: #b8d9b8;
+      font-size: 0.75rem;
+      font-family: 'DM Mono', monospace;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-section {
+      background: var(--green-dark);
+      padding: 3rem 5rem;
+    }
+
+    .search-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1rem;
+    }
+
+    .search-bar {
+      display: flex;
+      background: #fff;
+      border-radius: 3px;
+      overflow: hidden;
+      max-width: 700px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 1.1rem 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--neutral);
+    }
+    .search-bar input::placeholder { color: #aaa; }
+
+    .search-bar button {
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      padding: 0 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.2s;
+    }
+    .search-bar button:hover { background: var(--orange-dark); }
+
+    /* ── LISTINGS ── */
+    .listings-section {
+      padding: 6rem 5rem;
+      background: var(--white);
+    }
+
+    .section-header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--green-deep);
+    }
+    .section-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--green);
+    }
+
+    .section-link {
+      font-size: 0.875rem;
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid var(--green);
+      padding-bottom: 1px;
+    }
+
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .listing-card {
+      border-radius: 3px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .listing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(26,77,26,0.12);
+    }
+
+    .listing-img {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .listing-img-bg {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* placeholder image with gradient */
+    .listing-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .listing-badge {
+      position: absolute; top: 0.75rem; left: 0.75rem;
+      background: var(--green);
+      color: #fff;
+      font-size: 0.7rem;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 1px;
+    }
+    .listing-badge.sold { background: var(--neutral); }
+    .listing-badge.pending { background: var(--orange); }
+
+    .listing-info {
+      padding: 1.25rem;
+      background: #fff;
+      border: 1px solid rgba(51,153,51,0.1);
+      border-top: none;
+    }
+
+    .listing-price {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--green-deep);
+      margin-bottom: 0.3rem;
+    }
+
+    .listing-address {
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 0.75rem;
+    }
+
+    .listing-specs {
+      display: flex; gap: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: #888;
+    }
+    .listing-specs span { white-space: nowrap; }
+
+    /* ── VALUE SECTION ── */
+    .value-section {
+      background: var(--green-light);
+      padding: 6rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .value-left .section-title { margin-bottom: 1.5rem; }
+
+    .value-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #4a5a4a;
+      margin-bottom: 2rem;
+    }
+
+    .value-right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .value-card {
+      background: #fff;
+      border-radius: 3px;
+      padding: 1.75rem;
+      border-left: 3px solid var(--green);
+    }
+
+    .value-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .value-card-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green-deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .value-card-text {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #666;
+    }
+
+    /* ── CTA STRIP ── */
+    .cta-strip {
+      background: var(--green-deep);
+      padding: 5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-strip::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(51,153,51,0.15) 0%, transparent 70%);
+    }
+
+    .cta-strip h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .cta-strip h2 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--green);
+    }
+
+    .cta-strip p {
+      color: rgba(255,255,255,0.65);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .cta-strip .btn-primary {
+      font-size: 1rem;
+      padding: 1.1rem 2.5rem;
+      position: relative;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a1a0a;
+      padding: 3rem 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-word {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: -0.04em;
+    }
+    .footer-word span { color: var(--green); }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .footer-bhgre {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    .hero-headline { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-tagline  { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-sub      { animation: fadeUp 0.6s 0.3s ease both; }
+    .hero-actions  { animation: fadeUp 0.6s 0.4s ease both; }
+    .area-card     { animation: fadeUp 0.7s 0.3s ease both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 5rem 2rem 3rem; }
+      .search-section { padding: 2.5rem 2rem; }
+      .listings-section { padding: 4rem 2rem; }
+      .listings-grid { grid-template-columns: 1fr; }
+      .value-section { grid-template-columns: 1fr; padding: 4rem 2rem; gap: 3rem; }
+      .cta-strip { padding: 4rem 2rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="wordmark">970<span>.re</span></a>
+  <ul class="nav-links">
+    <li><a href="#buy">Buy</a></li>
+    <li><a href="#sell">Sell</a></li>
+    <li><a href="#communities">Communities</a></li>
+    <li><a href="#about">About Rich</a></li>
+    <li><a href="#contact" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-left">
+    <p class="hero-eyebrow">Northern Colorado Real Estate</p>
+    <h1 class="hero-headline">
+      Know<br>the <em>970.</em>
+    </h1>
+    <p class="hero-tagline">Home is here.</p>
+    <p class="hero-sub">
+      50 years of Northern Colorado real estate. From Fort Collins to Loveland, Berthoud to Wellington — nobody knows this market like we do.
+    </p>
+    <div class="hero-actions">
+      <a href="#search" class="btn-primary">Search Homes</a>
+      <a href="#valuation" class="btn-secondary">Get My Home Value</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="area-card">
+      <p class="area-card-label">The 970 Market · Right Now</p>
+      <div class="area-stats">
+        <div class="stat">
+          <div class="stat-num">$485K</div>
+          <div class="stat-label">Median Sale Price<br>Larimer County</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">18</div>
+          <div class="stat-label">Avg Days<br>on Market</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">97%</div>
+          <div class="stat-label">List-to-Sale<br>Price Ratio</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">340+</div>
+          <div class="stat-label">Active Listings<br>NoCo Region</div>
+        </div>
+      </div>
+      <div class="area-cities">
+        <span class="city-pill">Loveland</span>
+        <span class="city-pill">Fort Collins</span>
+        <span class="city-pill">Berthoud</span>
+        <span class="city-pill">Longmont</span>
+        <span class="city-pill">Wellington</span>
+        <span class="city-pill">Timnath</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH BAR -->
+<section class="search-section" id="search">
+  <p class="search-label">Search homes in Northern Colorado</p>
+  <div class="search-bar">
+    <input type="text" placeholder="City, zip code, neighborhood, or address…" />
+    <button>Search →</button>
+  </div>
+</section>
+
+<!-- FEATURED LISTINGS -->
+<section class="listings-section" id="buy">
+  <div class="section-header">
+    <h2 class="section-title">Featured <em>Listings</em></h2>
+    <a href="#" class="section-link">View all homes →</a>
+  </div>
+
+  <div class="listings-grid">
+
+    <!-- Card 1 -->
+    <a href="#" class="listing-card">
+      <div class="listing-img">
+        <svg class="listing-img-bg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#1a4d1a"/>
+              <stop offset="100%" style="stop-color:#2d7a2d"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="200" fill="url(#g1)"/>
+          <rect x="80" y="90" width="160" height="90" fill="rgba(255,255,255,0.1)" rx="2"/>
+          <polygon points="80,90 160,40 240,90" fill="rgba(255,255,255,0.15)"/>
+          <rect x="140" y="130" width="40" height="50" fill="rgba(255,255,255,0.12)"/>
+          <rect x="90" y="100" width="30" height="25" fill="rgba(255,255,255,0.08)" rx="1"/>
+          <rect x="175" y="100" width="30" height="25" fill="rgba(255,255,255,0.08)" rx="1"/>
+          <!-- mountains bg -->
+          <polygon points="0,200 100,80 200,140 300,60 400,120 400,200" fill="rgba(0,0,0,0.2)"/>
+        </svg>
+        <span class="listing-badge">Active</span>
+      </div>
+      <div class="listing-info">
+        <div class="listing-price">$549,000</div>
+        <div class="listing-address">2847 Crestview Dr · Loveland, CO 80538</div>
+        <div class="listing-specs">
+          <span>4 bd</span>
+          <span>3 ba</span>
+          <span>2,340 sqft</span>
+          <span>0.22 ac</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 2 -->
+    <a href="#" class="listing-card">
+      <div class="listing-img">
+        <svg class="listing-img-bg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0f2e0f"/>
+              <stop offset="100%" style="stop-color:#1a4d1a"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="200" fill="url(#g2)"/>
+          <rect x="50" y="80" width="300" height="110" fill="rgba(255,255,255,0.08)" rx="2"/>
+          <rect x="50" y="80" width="300" height="30" fill="rgba(255,255,255,0.1)"/>
+          <rect x="70" y="120" width="50" height="70" fill="rgba(255,255,255,0.1)"/>
+          <rect x="140" y="120" width="50" height="70" fill="rgba(255,255,255,0.1)"/>
+          <rect x="210" y="120" width="50" height="70" fill="rgba(255,255,255,0.1)"/>
+          <polygon points="0,200 150,60 300,130 400,90 400,200" fill="rgba(0,0,0,0.25)"/>
+        </svg>
+        <span class="listing-badge pending">Pending</span>
+      </div>
+      <div class="listing-info">
+        <div class="listing-price">$785,000</div>
+        <div class="listing-address">1104 Foothills Pkwy · Fort Collins, CO 80525</div>
+        <div class="listing-specs">
+          <span>5 bd</span>
+          <span>4 ba</span>
+          <span>3,180 sqft</span>
+          <span>0.35 ac</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 3 -->
+    <a href="#" class="listing-card">
+      <div class="listing-img">
+        <svg class="listing-img-bg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#2d7a2d"/>
+              <stop offset="100%" style="stop-color:#339933"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="200" fill="url(#g3)"/>
+          <rect x="100" y="85" width="200" height="115" fill="rgba(255,255,255,0.1)" rx="1"/>
+          <polygon points="100,85 200,35 300,85" fill="rgba(255,255,255,0.12)"/>
+          <rect x="160" y="135" width="45" height="65" fill="rgba(255,255,255,0.1)"/>
+          <rect x="110" y="100" width="35" height="28" fill="rgba(255,255,255,0.08)"/>
+          <rect x="220" y="100" width="35" height="28" fill="rgba(255,255,255,0.08)"/>
+          <rect x="0" y="150" width="400" height="50" fill="rgba(0,0,0,0.15)"/>
+        </svg>
+        <span class="listing-badge">Active</span>
+      </div>
+      <div class="listing-info">
+        <div class="listing-price">$389,500</div>
+        <div class="listing-address">518 Mountain Ave · Berthoud, CO 80513</div>
+        <div class="listing-specs">
+          <span>3 bd</span>
+          <span>2 ba</span>
+          <span>1,720 sqft</span>
+          <span>0.18 ac</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- VALUE PROPS -->
+<section class="value-section" id="about">
+  <div class="value-left">
+    <h2 class="section-title">Deep roots.<br><em>Real results.</em></h2>
+    <p class="value-text">
+      50 years in the 970 means knowing which streets flood in spring, which subdivisions have HOA issues, and where the hidden gems are before they hit the market. That's the difference between a transaction and the right move.
+    </p>
+    <a href="#contact" class="btn-primary">Talk to Rich →</a>
+  </div>
+  <div class="value-right">
+    <div class="value-card">
+      <div class="value-icon">🏔️</div>
+      <div class="value-card-title">Local Expertise</div>
+      <div class="value-card-text">50 years of Northern Colorado transactions. Every neighborhood, every market cycle.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🔍</div>
+      <div class="value-card-title">Smart Search</div>
+      <div class="value-card-text">AI-powered MLS access. Find exactly what you need, faster than any portal.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">📊</div>
+      <div class="value-card-title">Market Insight</div>
+      <div class="value-card-text">Real-time data, honest analysis. Know what a home is really worth before you offer.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🤝</div>
+      <div class="value-card-title">Full Service</div>
+      <div class="value-card-text">Buy, sell, invest. BHGRE Neuhaus-backed with everything you need under one roof.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="cta-strip" id="valuation">
+  <h2>What's your home<br><em>actually worth?</em></h2>
+  <p>Get a real, data-backed valuation — not a Zestimate.</p>
+  <a href="#contact" class="btn-primary">Get My Free Home Value</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-word">970<span>.re</span></div>
+  <div class="footer-copy">© 2025 970.re · Rich Kopcho, Broker<br>Better Homes & Gardens Real Estate Neuhaus · Loveland, CO</div>
+  <div class="footer-bhgre">Licensed in Colorado<br>Equal Housing Opportunity</div>
+</footer>
+
+</body>
+</html>
