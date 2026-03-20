@@ -13,6 +13,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
+    }
+
+    // Validate phone if provided — must be 10 digits (US)
+    const digits = phone ? phone.replace(/\D/g, "") : "";
+    if (phone && digits.length < 10) {
+      return NextResponse.json({ error: "Invalid phone number" }, { status: 400 });
+    }
+
     await sql`
       INSERT INTO leads (type, name, email, phone, address, message)
       VALUES (${type}, ${name}, ${email}, ${phone ?? null}, ${address ?? null}, ${message ?? null})
