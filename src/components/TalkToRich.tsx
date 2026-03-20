@@ -9,7 +9,7 @@ export default function TalkToRich() {
   return (
     <>
       <Link
-        href="tel:+19706698677"
+        href="sms:+19706698677"
         className="talk-to-rich-btn"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
