@@ -6,5 +6,8 @@
   "display": "browser",
   "background_color": "#0f2e0f",
   "theme_color": "#339933",
-  "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
 }
