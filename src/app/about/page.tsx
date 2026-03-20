@@ -70,7 +70,7 @@ export default function AboutPage() {
           }}
         >
           <p style={{ marginBottom: "1.5rem" }}>
-            Rich Kopcho has spent 50 years in Northern Colorado real estate — buying, selling, and investing across every neighborhood in the 970 area code. From Fort Collins to Loveland, Berthoud to Wellington, he&apos;s seen every market cycle this region has produced.
+            Rich Kopcho has spent 50 years in Northern Colorado.
           </p>
           <p style={{ marginBottom: "1.5rem" }}>
             As a broker with Better Homes &amp; Gardens Real Estate Neuhaus, Rich brings a combination of deep local knowledge and modern technology to every transaction. That means knowing which streets flood in spring, where the hidden gems are before they hit the market, and what a home is actually worth — not just what an algorithm says.
