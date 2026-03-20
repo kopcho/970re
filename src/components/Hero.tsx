@@ -19,7 +19,7 @@ export default function Hero() {
           <p className="hero-tagline">Home is here.</p>
 
           <p className="hero-sub">
-            50 years of Northern Colorado real estate. From Fort Collins to Loveland, Berthoud to Wellington — nobody knows this market like we do.
+            50 years in the 970. Built businesses here. Now helping others put down roots.
           </p>
 
           <div className="hero-actions">
