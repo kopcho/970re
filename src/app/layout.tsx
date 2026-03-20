@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://970.re"),
   title: {
     template: "%s | 970.re",
-    default: "970.re — Know the 970. | Northern Colorado Real Estate",
+    default: "970.re — Know the 970 | Northern Colorado Real Estate",
   },
   description:
     "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code. Better Homes & Gardens Real Estate — Neuhaus.",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     canonical: "https://970.re",
   },
   openGraph: {
-    title: "970.re — Know the 970. | Northern Colorado Real Estate",
+    title: "970.re — Know the 970 | Northern Colorado Real Estate",
     description:
       "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code. Better Homes & Gardens Real Estate — Neuhaus.",
     url: "https://970.re",
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "970.re — Know the 970. | Northern Colorado Real Estate",
+    title: "970.re — Know the 970 | Northern Colorado Real Estate",
     description:
       "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code.",
     images: ["/images/rich-kopcho.jpg"],
