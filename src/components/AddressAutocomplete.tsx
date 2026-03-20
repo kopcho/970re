@@ -5,12 +5,14 @@ import { useState, useRef } from "react";
 interface Props {
   value: string;
   onChange: (value: string) => void;
+  onValidated?: (valid: boolean) => void;
   style?: React.CSSProperties;
   required?: boolean;
 }
 
-export default function AddressAutocomplete({ value, onChange, style, required }: Props) {
+export default function AddressAutocomplete({ value, onChange, onValidated, style, required }: Props) {
   const [suggestion, setSuggestion] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const [checking, setChecking] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -18,17 +20,24 @@ export default function AddressAutocomplete({ value, onChange, style, required }
     if (!input.trim() || input.length < 8) return;
     setChecking(true);
     setSuggestion(null);
+    setNotFound(false);
     try {
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(input)}&components=country:US&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}`
       );
       const data = await res.json();
       const result = data.results?.[0];
-      if (result && result.formatted_address && result.formatted_address !== input) {
+      if (!result) {
+        setNotFound(true);
+        onValidated?.(false);
+      } else if (result.formatted_address !== input) {
         setSuggestion(result.formatted_address);
+        onValidated?.(false);
+      } else {
+        onValidated?.(true);
       }
     } catch {
-      // silent fail — don't block form submission
+      // silent fail on network error
     } finally {
       setChecking(false);
     }
@@ -37,6 +46,8 @@ export default function AddressAutocomplete({ value, onChange, style, required }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
     setSuggestion(null);
+    setNotFound(false);
+    onValidated?.(false);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
@@ -48,6 +59,8 @@ export default function AddressAutocomplete({ value, onChange, style, required }
   const acceptSuggestion = () => {
     onChange(suggestion!);
     setSuggestion(null);
+    setNotFound(false);
+    onValidated?.(true);
   };
 
   return (
@@ -59,12 +72,17 @@ export default function AddressAutocomplete({ value, onChange, style, required }
         onChange={handleChange}
         onBlur={handleBlur}
         required={required}
-        style={{ ...style, marginBottom: 0 }}
+        style={{ ...style, marginBottom: 0, borderColor: notFound ? "#e05418" : undefined }}
         autoComplete="off"
       />
       {checking && (
         <p style={{ fontSize: "0.8rem", color: "#888", marginTop: "0.4rem" }}>
           Verifying address…
+        </p>
+      )}
+      {notFound && (
+        <p style={{ fontSize: "0.85rem", color: "var(--orange-dark)", marginTop: "0.4rem" }}>
+          ⚠ Address not found — please double-check before submitting.
         </p>
       )}
       {suggestion && (
@@ -81,7 +99,7 @@ export default function AddressAutocomplete({ value, onChange, style, required }
           flexWrap: "wrap",
         }}>
           <span style={{ fontSize: "0.875rem", color: "var(--green-deep)" }}>
-            ✓ Verified: <strong>{suggestion}</strong>
+            ✓ Did you mean: <strong>{suggestion}</strong>
           </span>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
@@ -98,11 +116,11 @@ export default function AddressAutocomplete({ value, onChange, style, required }
                 cursor: "pointer",
               }}
             >
-              Use this
+              Yes, use this
             </button>
             <button
               type="button"
-              onClick={() => setSuggestion(null)}
+              onClick={() => { setSuggestion(null); onValidated?.(true); }}
               style={{
                 background: "transparent",
                 color: "#888",

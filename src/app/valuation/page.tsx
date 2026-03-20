@@ -7,12 +7,19 @@ import AddressAutocomplete from "@/components/AddressAutocomplete";
 export default function ValuationPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [addressVerified, setAddressVerified] = useState(false);
+  const [addressWarning, setAddressWarning] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!addressVerified) {
+      setAddressWarning(true);
+      return;
+    }
+    setAddressWarning(false);
     setStatus("sending");
     const res = await fetch("/api/leads", {
       method: "POST",
@@ -59,7 +66,18 @@ export default function ValuationPage() {
             <input style={inputStyle} type="text" name="name" placeholder="Your name" value={form.name} onChange={handleChange} required />
             <input style={inputStyle} type="email" name="email" placeholder="Email address" value={form.email} onChange={handleChange} required />
             <input style={inputStyle} type="tel" name="phone" placeholder="Phone number" value={form.phone} onChange={handleChange} />
-            <AddressAutocomplete value={form.address} onChange={(v) => setForm(f => ({ ...f, address: v }))} style={inputStyle} required />
+            <AddressAutocomplete
+              value={form.address}
+              onChange={(v) => { setForm(f => ({ ...f, address: v })); setAddressWarning(false); }}
+              onValidated={setAddressVerified}
+              style={inputStyle}
+              required
+            />
+            {addressWarning && (
+              <p style={{ color: "var(--orange-dark)", marginBottom: "1rem", fontSize: "0.9rem" }}>
+                ⚠ Please verify your address before submitting — use the suggestion above or correct the address.
+              </p>
+            )}
             {status === "error" && (
               <p style={{ color: "var(--orange-dark)", marginBottom: "1rem", fontSize: "0.9rem" }}>Something went wrong — please try again or call Rich at (970) 669-8677.</p>
             )}
