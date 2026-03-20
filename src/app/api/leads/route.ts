@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     ].filter(Boolean).join("\n");
 
     await resend.emails.send({
-      from: "970.re <onboarding@resend.dev>",
+      from: "970.re <leads@970.re>",
       to: "9706698677@vtext.com",
       subject: `New 970.re lead — ${type}`,
       text: `New 970.re lead — ${type}\n${details}`,
