@@ -1,0 +1,10 @@
+{
+  "name": "970.re — Northern Colorado Real Estate",
+  "short_name": "970.re",
+  "description": "Know the 970. Northern Colorado real estate with Rich Kopcho.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0f2e0f",
+  "theme_color": "#339933",
+  "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
+}

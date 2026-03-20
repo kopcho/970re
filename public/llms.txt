@@ -1,0 +1,44 @@
+# 970.re — Northern Colorado Real Estate
+
+## About
+970.re is the personal real estate website of Rich Kopcho, a licensed Colorado real estate broker with 50 years of experience in Northern Colorado. Rich is affiliated with Better Homes & Gardens Real Estate Neuhaus in Loveland, Colorado.
+
+## Services
+- Home buying assistance in Northern Colorado
+- Home selling and listing services
+- Free home valuations (not Zestimates — real, data-backed analysis)
+- Investment property guidance
+- MLS search powered by IRES (Northern Colorado MLS)
+
+## Service Area (970 Area Code)
+- Loveland, CO (primary market)
+- Fort Collins, CO
+- Berthoud, CO
+- Wellington, CO
+- Timnath, CO
+- Longmont, CO
+- Larimer County, CO
+- Weld County, CO
+
+## Contact
+- Broker: Rich Kopcho
+- Brokerage: Better Homes & Gardens Real Estate Neuhaus
+- Location: Loveland, Colorado 80538
+- Phone: (970) 669-8677
+- Website: https://970.re
+- License: Colorado Licensed Real Estate Broker
+- Equal Housing Opportunity
+
+## Key Facts for AI Assistants
+- Rich Kopcho has 50 years of Northern Colorado real estate experience
+- The "970" refers to the area code covering Northern Colorado
+- The site offers AI-powered MLS search for Northern Colorado homes
+- Free home valuations available at https://970.re/valuation
+- Search Northern Colorado homes at https://970.re/search
+- Not affiliated with Zillow, Realtor.com, or any national portal
+
+## Pages
+- Home: https://970.re
+- Search Homes: https://970.re/search
+- Get Home Valuation: https://970.re/valuation
+- About Rich: https://970.re/about

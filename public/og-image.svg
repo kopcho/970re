@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0f2e0f"/>
+
+  <!-- Subtle grid pattern overlay -->
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1a4d1a" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.4"/>
+
+  <!-- Accent bar top -->
+  <rect x="0" y="0" width="1200" height="6" fill="#339933"/>
+
+  <!-- Orange accent dot / bullet -->
+  <circle cx="600" cy="220" r="8" fill="#ff6b35"/>
+
+  <!-- Main wordmark: 970 -->
+  <text
+    x="600"
+    y="330"
+    font-family="'DM Mono', 'Courier New', monospace"
+    font-size="160"
+    font-weight="500"
+    fill="#ffffff"
+    text-anchor="middle"
+    letter-spacing="-6"
+  >970</text>
+
+  <!-- .re accent -->
+  <text
+    x="760"
+    y="330"
+    font-family="'DM Mono', 'Courier New', monospace"
+    font-size="160"
+    font-weight="500"
+    fill="#339933"
+    text-anchor="start"
+    letter-spacing="-6"
+  >.re</text>
+
+  <!-- Tagline -->
+  <text
+    x="600"
+    y="400"
+    font-family="'DM Sans', Arial, sans-serif"
+    font-size="32"
+    font-weight="400"
+    fill="#a8d4a8"
+    text-anchor="middle"
+    letter-spacing="4"
+  >KNOW THE 970.</text>
+
+  <!-- Subtitle -->
+  <text
+    x="600"
+    y="450"
+    font-family="'DM Sans', Arial, sans-serif"
+    font-size="22"
+    font-weight="300"
+    fill="#6aaa6a"
+    text-anchor="middle"
+    letter-spacing="1"
+  >Northern Colorado Real Estate</text>
+
+  <!-- Bottom attribution -->
+  <text
+    x="600"
+    y="560"
+    font-family="'DM Sans', Arial, sans-serif"
+    font-size="17"
+    font-weight="400"
+    fill="#4a7a4a"
+    text-anchor="middle"
+    letter-spacing="0.5"
+  >Rich Kopcho, Broker · Better Homes &amp; Gardens Real Estate Neuhaus</text>
+
+  <!-- Accent bar bottom -->
+  <rect x="0" y="624" width="1200" height="6" fill="#ff6b35"/>
+</svg>
