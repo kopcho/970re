@@ -58,10 +58,10 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/images/rich-kopcho.jpg",
         width: 1200,
         height: 630,
-        alt: "970.re — Northern Colorado Real Estate",
+        alt: "Rich Kopcho, Broker — 970.re Northern Colorado Real Estate",
       },
     ],
   },
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     title: "970.re — Know the 970. | Northern Colorado Real Estate",
     description:
       "Rich Kopcho, Broker — 50 years of Northern Colorado real estate. Buy, sell, and invest in Fort Collins, Loveland, Berthoud, Wellington, and the 970 area code.",
-    images: ["/og-image.svg"],
+    images: ["/images/rich-kopcho.jpg"],
   },
   robots: {
     index: true,

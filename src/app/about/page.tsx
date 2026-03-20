@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AboutPage() {
   return (
@@ -13,6 +14,22 @@ export default function AboutPage() {
       }}
     >
       <div style={{ maxWidth: "680px", width: "100%" }}>
+        <Image
+          src="/images/rich-kopcho.jpg"
+          alt="Rich Kopcho, Broker — Better Homes & Gardens Real Estate Neuhaus, Loveland CO"
+          width={680}
+          height={400}
+          style={{
+            width: "100%",
+            height: "auto",
+            borderRadius: "3px",
+            marginBottom: "2.5rem",
+            objectFit: "cover",
+            objectPosition: "center top",
+          }}
+          priority
+        />
+
         <p
           style={{
             fontFamily: "var(--font-dm-mono), monospace",
