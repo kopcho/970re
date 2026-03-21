@@ -196,8 +196,7 @@ export async function POST(req: NextRequest) {
       { headers: { "Cache-Control": "no-store" } }
     );
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error("AI search error:", msg);
-    return NextResponse.json({ error: "Search failed", detail: msg }, { status: 500 });
+    console.error("AI search error:", err);
+    return NextResponse.json({ error: "Search failed" }, { status: 500 });
   }
 }
