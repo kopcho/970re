@@ -45,7 +45,9 @@ interface AIResult {
 
 export default function SearchPage() {
   // Tab state
-  const [mode, setMode] = useState<"ai" | "filter">("ai");
+  // AI search is built but parked until ANTHROPIC_API_KEY is live in production
+  // Switch back to "ai" to re-enable it
+  const [mode, setMode] = useState<"ai" | "filter">("filter");
 
   // AI search state
   const [aiQuery, setAiQuery] = useState("");
@@ -121,7 +123,7 @@ export default function SearchPage() {
         <div style={{
           background: "var(--green-deep)",
           color: "#fff",
-          padding: "5rem 5rem 0",
+          padding: "5rem 5rem 3rem",
         }}>
           <p style={{
             fontFamily: "var(--font-dm-mono), monospace",
@@ -143,7 +145,7 @@ export default function SearchPage() {
             Search <em style={{ fontStyle: "italic", fontWeight: 300, color: "rgba(255,255,255,0.7)" }}>Homes</em>
           </h1>
 
-          {/* Mode Tabs */}
+          {/* Mode Tabs — hidden until ANTHROPIC_API_KEY is live in production
           <div style={{ display: "flex", gap: 0, borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
             {(["ai", "filter"] as const).map((m) => (
               <button
@@ -167,6 +169,7 @@ export default function SearchPage() {
               </button>
             ))}
           </div>
+          */}
         </div>
 
         {/* ── AI SEARCH MODE ── */}
