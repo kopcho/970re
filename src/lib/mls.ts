@@ -102,6 +102,44 @@ export async function fetchMLSListings(options: {
   return (data.value ?? []) as MLSListing[];
 }
 
+export interface MLSListingDetail extends MLSListing {
+  YearBuilt?: number;
+  Zoning?: string;
+  SubdivisionName?: string;
+  Latitude?: number;
+  Longitude?: number;
+  BelowGradeFinishedArea?: number;
+  DaysOnMarket?: number;
+  ListAgentFullName?: string;
+  ListAgentEmail?: string;
+  ListAgentPreferredPhone?: string;
+  Heating?: string[];
+  Cooling?: string[];
+  Appliances?: string[];
+  Basement?: string[];
+  ConstructionMaterials?: string[];
+  Roof?: string[];
+  Levels?: string[];
+  CountyOrParish?: string;
+  HighSchool?: string;
+  ElementarySchool?: string;
+  AssociationYN?: boolean;
+}
+
+export async function fetchListingByKey(key: string): Promise<MLSListingDetail | null> {
+  const res = await fetch(`${MLS_BASE}/Property('${key}')?$expand=Media`, {
+    headers: {
+      Authorization: `Bearer ${MLS_KEY}`,
+      "Accept-Encoding": "gzip",
+    },
+    next: { revalidate: 300 },
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (data.error) return null;
+  return data as MLSListingDetail;
+}
+
 export function getListingPhoto(listing: MLSListing): string | null {
   if (!listing.Media?.length) return null;
   const sorted = [...listing.Media].sort((a, b) => (a.Order ?? 999) - (b.Order ?? 999));

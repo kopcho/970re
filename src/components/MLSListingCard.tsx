@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { MLSListing, getListingPhoto, formatPrice, formatSqft } from "@/lib/mls";
 
 function PlaceholderImage() {
@@ -28,24 +31,36 @@ function statusBadgeStyle(status: string) {
 export default function MLSListingCard({ listing }: { listing: MLSListing }) {
   const photo = getListingPhoto(listing);
   const sqft = listing.LivingArea ?? listing.AboveGradeFinishedArea;
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
     <>
-      <a
-        href={`/listing/${listing.ListingKey}`}
-        className="mls-card"
-      >
+      <a href={`/listing/${listing.ListingKey}`} className="mls-card">
         <div className="mls-card-img">
+          {/* Shimmer shown until image loads */}
+          {photo && !imgLoaded && <div className="mls-shimmer" />}
+
           {photo ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={photo}
               alt={`${listing.UnparsedAddress}, ${listing.City}`}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              onLoad={() => setImgLoaded(true)}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+                opacity: imgLoaded ? 1 : 0,
+                transition: "opacity 0.4s ease",
+                position: "absolute",
+                inset: 0,
+              }}
             />
           ) : (
             <PlaceholderImage />
           )}
+
           <span className="mls-badge" style={statusBadgeStyle(listing.StandardStatus)}>
             {listing.StandardStatus}
           </span>
@@ -60,6 +75,9 @@ export default function MLSListingCard({ listing }: { listing: MLSListing }) {
             {listing.BathroomsTotalInteger != null && <span>{listing.BathroomsTotalInteger} ba</span>}
             {sqft && <span>{formatSqft(sqft)} sqft</span>}
             {listing.LotSizeAcres && <span>{listing.LotSizeAcres.toFixed(2)} ac</span>}
+            {listing.GarageSpaces != null && listing.GarageSpaces > 0 && (
+              <span>{listing.GarageSpaces}-car garage</span>
+            )}
           </div>
         </div>
       </a>
@@ -82,7 +100,18 @@ export default function MLSListingCard({ listing }: { listing: MLSListing }) {
           height: 220px;
           position: relative;
           overflow: hidden;
-          background: #e8f0e8;
+          background: #d4e4d4;
+        }
+        .mls-shimmer {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, #d4e4d4 25%, #e8f0e8 50%, #d4e4d4 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.4s infinite;
+        }
+        @keyframes shimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
         }
         .mls-badge {
           position: absolute;
@@ -95,6 +124,7 @@ export default function MLSListingCard({ listing }: { listing: MLSListing }) {
           text-transform: uppercase;
           padding: 0.25rem 0.6rem;
           border-radius: 1px;
+          z-index: 1;
         }
         .mls-card-info {
           padding: 1.25rem;
