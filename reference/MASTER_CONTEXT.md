@@ -103,11 +103,11 @@ Source: Orchard / MLS data March 2026. Update monthly.
 |-------|-------------|--------|
 | 1 | Next.js scaffold + GitHub + Vercel deploy | ✅ Done |
 | 2 | Convert HTML prototype → React components | ✅ Done |
-| 3 | MLS search via 970re MCP server | 🔲 Blocked — waiting on MCP server |
+| 3 | MLS search — direct API + AI search + MCP server | ✅ Done |
 | 4 | Lead capture → Neon DB + SMS notifications | ✅ Done |
 | 5 | Mobile hamburger nav + floating Talk to Rich button | ✅ Done |
 | 6 | SEO / GEO / AEO — sitemap, robots, JSON-LD, llms.txt, OG image | ✅ Done |
-| 7 | Auth (Clerk) + agent dashboard | 🔲 Next after MCP |
+| 7 | Auth (Clerk) + agent dashboard | 🔲 Next |
 | 8 | Multi-tenancy (tenant_id, agent accounts) | 🔲 Future |
 | 9 | Stripe subscriptions | 🔲 Future |
 | 10 | Neuhaus pilot — 20+ agents | 🔲 Future |
@@ -115,27 +115,49 @@ Source: Orchard / MLS data March 2026. Update monthly.
 
 ---
 
-## Phase 3 — MLS Search (Pending MCP Server)
+## Phase 3 — MLS Search (Complete)
 
 ### Data Source
-- **API:** Spark API via MLS Grid
-- **Credentials:** Under SDK Tech LLC (user: SDKTECH)
-- **Coverage:** IRES MLS (Northern Colorado) + REcolorado data-sharing agreement = full Front Range
-- **Rate limits:** 2 req/sec, 7,200/hour, 40,000/day — token refreshes every 8 hours
+- **API:** MLS Grid demo BBO (IRES feed) — `https://api-demo.mlsgrid.com/v2`
+- **Key:** `MLS_GRID_API_KEY` env var
+- **Coverage:** IRES MLS (Northern Colorado) — 46 active listings in demo, predominantly NoCo
+- **Production:** Swap `api-demo.mlsgrid.com` → `api.mlsgrid.com` when full subscription activates
 
-### MCP Server
-- Built separately as the **970re MCP server** under SDK Tech LLC
-- Once running, wire `/search` page to it via `MCP_SERVER_URL` env var
+### Architecture
 
-### Search Page Behavior (when live)
-- Natural language input → MLS query
-- Results as `<ListingCard>` grid
-- Filters: price range, beds/baths, city, property type
-- Each card → `/listing/[mlsId]` detail page
-- Featured listings on home page pull from real MLS (replace hardcoded cards)
+```
+/search page (Next.js client)
+  ├── AI Search tab → POST /api/ai-search → Claude Haiku (tool use) → MLS Grid API
+  └── Filter tab   → GET /api/listings → MLS Grid API → filter server-side
 
-### Stub (current)
-`/search` shows "Coming Soon — MLS Search" with email capture. Do not remove until MCP server is confirmed running.
+mcp/server.ts (stdio MCP server for Claude Desktop / Claude Code)
+  ├── search_listings
+  ├── get_corridor_cities
+  └── get_listing_details
+```
+
+### Key files
+- `src/lib/mls.ts` — MLSListing type, fetchMLSListings(), formatters
+- `src/lib/corridors.ts` — geographic corridor → city mappings + NOCO_GEOGRAPHY string
+- `src/app/api/ai-search/route.ts` — Claude Haiku + tool use → MLS results + summary
+- `src/app/api/listings/route.ts` — structured filter search
+- `src/components/MLSListingCard.tsx` — listing card with real photos
+- `src/components/FeaturedListings.tsx` — async server component, home page featured
+- `mcp/server.ts` — standalone MCP server (stdio transport)
+
+### Natural Language Examples (AI Search)
+- "3bd 2ba with 3-car garage and 5 acres along I-25" → GarageSpaces≥3, LotSizeAcres≥5, I-25 corridor cities
+- "Find a repo yard with outdoor storage near Loveland" → acres + garage + keywords
+- "Investment property near CSU" → Fort Collins, price-relative search
+
+### MCP Server — connecting to Claude
+```bash
+# Claude Code (global)
+claude mcp add 970re-mls node C:/Users/rich/projects/970re/mcp/dist/server.js \
+  --env MLS_GRID_API_KEY=<key>
+
+# Claude Desktop — add to claude_desktop_config.json (see mcp/README.md)
+```
 
 ---
 
@@ -212,9 +234,9 @@ Lives at `970.re/loveland-sculpture-tour`. Will be the most comprehensive digita
 NEXT_PUBLIC_SITE_URL=https://970.re
 DATABASE_URL=             # Neon Postgres (set in Vercel + .env.local)
 RESEND_API_KEY=           # Email/SMS notifications (set in Vercel + .env.local)
-
-# Phase 3
-MCP_SERVER_URL=           # 970re MCP server endpoint (Spark API / IRES)
+NEXT_PUBLIC_GOOGLE_MAPS_KEY=  # Address geocoding (set in Vercel + .env.local)
+MLS_GRID_API_KEY=         # MLS Grid BBO API key (set in Vercel + .env.local)
+ANTHROPIC_API_KEY=        # Claude API for AI search (set in Vercel + .env.local)
 
 # Phase 7+
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=

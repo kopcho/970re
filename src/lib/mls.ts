@@ -16,6 +16,9 @@ export interface MLSListing {
   LivingArea?: number;
   AboveGradeFinishedArea?: number;
   LotSizeAcres?: number;
+  GarageSpaces?: number;
+  PropertyType?: string;
+  PublicRemarks?: string;
   StandardStatus: "Active" | "Pending" | "Closed" | "Expired";
   PhotosCount?: number;
   Media?: MLSMedia[];
@@ -41,6 +44,9 @@ const SELECT_FIELDS = [
   "LivingArea",
   "AboveGradeFinishedArea",
   "LotSizeAcres",
+  "GarageSpaces",
+  "PropertyType",
+  "PublicRemarks",
   "StandardStatus",
   "PhotosCount",
 ].join(",");

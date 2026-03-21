@@ -1,0 +1,20 @@
+{
+  "name": "970re-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server exposing Northern Colorado MLS search tools for Rich Kopcho / 970.re",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx server.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "@modelcontextprotocol/sdk": "^1.10.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}
