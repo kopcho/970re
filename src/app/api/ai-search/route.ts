@@ -5,78 +5,70 @@ import { NOCO_GEOGRAPHY } from "@/lib/corridors";
 
 const client = new Anthropic();
 
-// Tool Claude uses to search MLS listings
 const SEARCH_TOOL: Anthropic.Tool = {
   name: "search_listings",
   description:
-    "Search Northern Colorado MLS listings. Call this with structured params parsed from the user's natural language query.",
+    "Search Northern Colorado MLS listings fresh. Use this for new searches or when the user wants to start over with different criteria.",
   input_schema: {
     type: "object",
     properties: {
       cities: {
         type: "array",
         items: { type: "string" },
-        description:
-          "List of NoCo city names to search. Omit to search all NoCo cities. Use corridor knowledge to expand 'along I-25' into specific cities.",
+        description: "NoCo city names. Omit for all NoCo. Expand corridors: 'I-25' → Loveland, Berthoud, Johnstown, Windsor, Fort Collins, Wellington, Timnath.",
       },
-      minBeds: { type: "number", description: "Minimum number of bedrooms" },
-      maxBeds: { type: "number", description: "Maximum number of bedrooms" },
-      minBaths: { type: "number", description: "Minimum bathrooms (integer)" },
-      minPrice: { type: "number", description: "Minimum list price in dollars" },
-      maxPrice: { type: "number", description: "Maximum list price in dollars" },
-      minAcres: { type: "number", description: "Minimum lot size in acres" },
-      maxAcres: { type: "number", description: "Maximum lot size in acres" },
-      minGarageSpaces: { type: "number", description: "Minimum garage spaces (e.g. 3 for '3 car garage')" },
-      propertyType: {
-        type: "string",
-        enum: ["Residential", "Commercial", "Land", "Multi-Family"],
-        description: "Property type filter",
-      },
-      keywords: {
-        type: "string",
-        description:
-          "Keywords to match against PublicRemarks (e.g. 'shop barn workshop storage RV'). Comma-separated.",
-      },
-      status: {
-        type: "string",
-        enum: ["Active", "Pending", "Closed"],
-        description: "Listing status. Default: Active",
+      minBeds: { type: "number" },
+      maxBeds: { type: "number" },
+      minBaths: { type: "number" },
+      minPrice: { type: "number" },
+      maxPrice: { type: "number" },
+      minAcres: { type: "number" },
+      maxAcres: { type: "number" },
+      minGarageSpaces: { type: "number" },
+      propertyType: { type: "string", enum: ["Residential", "Commercial", "Land", "Multi-Family"] },
+      keywords: { type: "string", description: "Comma-separated keywords to match in listing remarks" },
+      status: { type: "string", enum: ["Active", "Pending", "Closed"] },
+    },
+  },
+};
+
+const REFINE_TOOL: Anthropic.Tool = {
+  name: "refine_results",
+  description:
+    "Filter the currently shown listings to a subset. Use this when the user says things like 'now show only the ones with a pool', 'narrow it down to under $500K', 'just the ones in Loveland', etc. Look at the listing remarks and details from earlier in the conversation to decide which keys to keep.",
+  input_schema: {
+    type: "object",
+    required: ["keep_keys"],
+    properties: {
+      keep_keys: {
+        type: "array",
+        items: { type: "string" },
+        description: "ListingKeys of the listings that match the new criteria. Must be a subset of the currently shown listings.",
       },
     },
   },
 };
 
+const TOOLS = [SEARCH_TOOL, REFINE_TOOL];
+
 interface SearchParams {
   cities?: string[];
-  minBeds?: number;
-  maxBeds?: number;
-  minBaths?: number;
-  minPrice?: number;
-  maxPrice?: number;
-  minAcres?: number;
-  maxAcres?: number;
-  minGarageSpaces?: number;
-  propertyType?: string;
-  keywords?: string;
-  status?: string;
+  minBeds?: number; maxBeds?: number; minBaths?: number;
+  minPrice?: number; maxPrice?: number;
+  minAcres?: number; maxAcres?: number;
+  minGarageSpaces?: number; propertyType?: string;
+  keywords?: string; status?: string;
 }
 
 async function executeSearch(
   params: SearchParams,
-  prefetched?: Promise<MLSListing[]>
+  prefetched: Promise<MLSListing[]>
 ): Promise<MLSListing[]> {
-  const status = params.status || "Active";
-  const all = await (prefetched ?? fetchMLSListings({ status, withMedia: true, top: 200 }));
+  const all = await prefetched;
+  let filtered = params.cities?.length
+    ? all.filter((l) => params.cities!.includes(l.City))
+    : all.filter((l) => NOCO_CITIES.includes(l.City));
 
-  // City filter
-  let filtered: MLSListing[];
-  if (params.cities && params.cities.length > 0) {
-    filtered = all.filter((l) => params.cities!.includes(l.City));
-  } else {
-    filtered = all.filter((l) => NOCO_CITIES.includes(l.City));
-  }
-
-  // Numeric filters
   if (params.minBeds) filtered = filtered.filter((l) => (l.BedroomsTotal ?? 0) >= params.minBeds!);
   if (params.maxBeds) filtered = filtered.filter((l) => (l.BedroomsTotal ?? 999) <= params.maxBeds!);
   if (params.minBaths) filtered = filtered.filter((l) => (l.BathroomsTotalInteger ?? 0) >= params.minBaths!);
@@ -86,120 +78,133 @@ async function executeSearch(
   if (params.maxAcres) filtered = filtered.filter((l) => (l.LotSizeAcres ?? 9999) <= params.maxAcres!);
   if (params.minGarageSpaces) filtered = filtered.filter((l) => (l.GarageSpaces ?? 0) >= params.minGarageSpaces!);
   if (params.propertyType) filtered = filtered.filter((l) => l.PropertyType === params.propertyType);
-
-  // Keyword search in PublicRemarks
   if (params.keywords) {
     const kws = params.keywords.toLowerCase().split(/[,\s]+/).filter(Boolean);
-    filtered = filtered.filter((l) => {
-      const remarks = (l.PublicRemarks ?? "").toLowerCase();
-      return kws.some((kw) => remarks.includes(kw));
-    });
+    filtered = filtered.filter((l) => kws.some((kw) => (l.PublicRemarks ?? "").toLowerCase().includes(kw)));
   }
-
   return filtered.sort((a, b) => b.ListPrice - a.ListPrice);
 }
 
-const SYSTEM_PROMPT = `You are an expert Northern Colorado real estate search assistant for 970.re, the website of Rich Kopcho, a broker with 50 years of NoCo experience.
+/** Compact listing summary sent to Claude — enough detail for refinement queries */
+function listingSummary(l: MLSListing) {
+  return {
+    ListingKey: l.ListingKey,
+    address: `${l.UnparsedAddress}, ${l.City}`,
+    price: l.ListPrice,
+    beds: l.BedroomsTotal,
+    baths: l.BathroomsTotalInteger,
+    garage: l.GarageSpaces,
+    acres: l.LotSizeAcres,
+    sqft: l.LivingArea ?? l.AboveGradeFinishedArea,
+    type: l.PropertyType,
+    remarks: l.PublicRemarks?.slice(0, 250),
+  };
+}
+
+const SYSTEM_PROMPT = `You are an expert Northern Colorado real estate search assistant for 970.re, the website of Rich Kopcho — a broker with 50 years of NoCo experience.
 
 ${NOCO_GEOGRAPHY}
 
-Your job:
-1. Parse the user's natural language real estate query
-2. Call search_listings with the appropriate structured parameters
-3. After receiving results, write a concise, friendly response (2-3 sentences) summarizing what you found and any caveats (e.g., "The demo feed has limited listings" or "No results matched all criteria — here are the closest matches")
+You have two tools:
 
-Important notes:
+1. **search_listings** — fresh MLS search. Use for new queries or when user wants different criteria entirely.
+2. **refine_results** — filter the currently shown listings. Use when user says things like:
+   - "now show only ones with a pool"
+   - "narrow it to under $600K"
+   - "just the Loveland ones"
+   - "ones with a big garage"
+   - "the newer ones" / "built after 2015"
+   Look at the listing data from earlier in the conversation (remarks, specs) to decide which keys to keep.
+
+Rules:
 - "Along I-25" = Loveland, Berthoud, Johnstown, Windsor, Fort Collins, Wellington, Timnath
 - "3 car garage" = minGarageSpaces: 3
 - "5 acres" = minAcres: 5
-- Repo/storage/automotive uses = look for large lots, garage spaces, commercial or residential with acreage
-- Always call the search tool — never make up listing data
-- Keep your summary response short (2-3 sentences max)`;
+- Always call a tool — never invent listing data
+- After tool result, write a 2-3 sentence summary of what was found or refined
+- If refine_results returns 0 matches, explain why and suggest loosening the criteria`;
 
 export async function POST(req: NextRequest) {
   try {
-    const { query } = await req.json();
+    const { query, messages: priorMessages } = await req.json() as {
+      query: string;
+      messages?: Anthropic.MessageParam[];
+    };
+
     if (!query?.trim()) {
       return NextResponse.json({ error: "Query is required" }, { status: 400 });
     }
 
-    let searchResults: MLSListing[] = [];
-    let searchParams: SearchParams = {};
-
-    // Kick off MLS fetch immediately — runs in parallel with Claude
+    // Start MLS fetch immediately — runs in parallel with Claude's first response
     const mlsPromise = fetchMLSListings({ status: "Active", withMedia: true, top: 200 });
 
-    // Step 1: Ask Claude to parse the query and call the tool
+    // Build message history: prior turns + new user query
     const messages: Anthropic.MessageParam[] = [
+      ...(priorMessages ?? []),
       { role: "user", content: query },
     ];
+
+    let searchResults: MLSListing[] = [];
+    let isRefinement = false;
 
     let response = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
-      tools: [SEARCH_TOOL],
+      tools: TOOLS,
       messages,
     });
 
-    // Step 2: Execute the tool call Claude made
     while (response.stop_reason === "tool_use") {
       const toolUse = response.content.find((b): b is Anthropic.ToolUseBlock => b.type === "tool_use");
-      if (!toolUse || toolUse.name !== "search_listings") break;
+      if (!toolUse) break;
 
-      searchParams = toolUse.input as SearchParams;
-      // MLS data is already in-flight — await the shared promise instead of a new fetch
-      searchResults = await executeSearch(searchParams, mlsPromise);
-
-      // Give Claude the results so it can write the summary
       messages.push({ role: "assistant", content: response.content });
+
+      if (toolUse.name === "search_listings") {
+        searchResults = await executeSearch(toolUse.input as SearchParams, mlsPromise);
+        isRefinement = false;
+      } else if (toolUse.name === "refine_results") {
+        const keepKeys = new Set((toolUse.input as { keep_keys: string[] }).keep_keys);
+        const allListings = await mlsPromise;
+        const nocoListings = allListings.filter((l) => NOCO_CITIES.includes(l.City));
+        searchResults = nocoListings.filter((l) => keepKeys.has(l.ListingKey));
+        isRefinement = true;
+      } else {
+        break;
+      }
+
+      // Send results back to Claude — include full summaries for future refinement
       messages.push({
         role: "user",
-        content: [
-          {
-            type: "tool_result",
-            tool_use_id: toolUse.id,
-            content: JSON.stringify({
-              count: searchResults.length,
-              listings: searchResults.slice(0, 12).map((l) => ({
-                ListingKey: l.ListingKey,
-                address: `${l.UnparsedAddress}, ${l.City}`,
-                price: l.ListPrice,
-                beds: l.BedroomsTotal,
-                baths: l.BathroomsTotalInteger,
-                garage: l.GarageSpaces,
-                acres: l.LotSizeAcres,
-                type: l.PropertyType,
-                remarks: l.PublicRemarks?.slice(0, 150),
-              })),
-            }),
-          },
-        ],
+        content: [{
+          type: "tool_result",
+          tool_use_id: toolUse.id,
+          content: JSON.stringify({
+            count: searchResults.length,
+            listings: searchResults.map(listingSummary),
+          }),
+        }],
       });
 
       response = await client.messages.create({
         model: "claude-haiku-4-5-20251001",
         max_tokens: 512,
         system: SYSTEM_PROMPT,
-        tools: [SEARCH_TOOL],
+        tools: TOOLS,
         messages,
       });
     }
 
-    // Extract Claude's text summary
+    // Append Claude's final text response to history
+    messages.push({ role: "assistant", content: response.content });
+
     const summary = response.content
       .filter((b): b is Anthropic.TextBlock => b.type === "text")
-      .map((b) => b.text)
-      .join(" ")
-      .trim();
+      .map((b) => b.text).join(" ").trim();
 
     return NextResponse.json(
-      {
-        listings: searchResults.slice(0, 12),
-        total: searchResults.length,
-        summary,
-        params: searchParams,
-      },
+      { listings: searchResults, total: searchResults.length, summary, messages, isRefinement },
       { headers: { "Cache-Control": "no-store" } }
     );
   } catch (err) {

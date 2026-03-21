@@ -43,6 +43,9 @@ interface AIResult {
   summary: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Message = Record<string, any>;
+
 export default function SearchPage() {
   // Tab state
   const [mode, setMode] = useState<"ai" | "filter">("ai");
@@ -53,6 +56,10 @@ export default function SearchPage() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Conversation state — persists across refinement queries
+  const [conversationMessages, setConversationMessages] = useState<Message[]>([]);
+  const isConversation = conversationMessages.length > 0;
 
   // Filter search state
   const [city, setCity] = useState("all");
@@ -69,27 +76,39 @@ export default function SearchPage() {
     fetch("/api/listings?city=all&page=1").catch(() => {});
   }, []);
 
-  // AI search handler
+  const resetConversation = () => {
+    setConversationMessages([]);
+    setAiResult(null);
+    setAiQuery("");
+    setAiError("");
+  };
+
+  // AI search handler — passes conversation history for refinement
   const handleAISearch = async (queryOverride?: string) => {
     const q = queryOverride ?? aiQuery;
     if (!q.trim()) return;
     setAiQuery(q);
     setAiLoading(true);
     setAiError("");
-    setAiResult(null);
     try {
       const res = await fetch("/api/ai-search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q }),
+        body: JSON.stringify({
+          query: q,
+          messages: conversationMessages.length > 0 ? conversationMessages : undefined,
+        }),
       });
       if (!res.ok) throw new Error("Search failed");
       const data = await res.json();
       setAiResult(data);
+      // Store conversation history for next refinement
+      if (data.messages) setConversationMessages(data.messages);
     } catch {
       setAiError("Couldn't complete the search. Please try again.");
     } finally {
       setAiLoading(false);
+      setAiQuery("");
     }
   };
 
@@ -177,6 +196,37 @@ export default function SearchPage() {
         {/* ── AI SEARCH MODE ── */}
         {mode === "ai" && (
           <div style={{ padding: "2.5rem 5rem 0" }}>
+
+            {/* Conversation context bar */}
+            {isConversation && aiResult && (
+              <div style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                maxWidth: "760px", marginBottom: "0.75rem",
+                padding: "0.5rem 0.75rem",
+                background: "rgba(51,153,51,0.06)",
+                borderRadius: "2px",
+                border: "1px solid rgba(51,153,51,0.12)",
+              }}>
+                <span style={{
+                  fontFamily: "var(--font-dm-mono), monospace",
+                  fontSize: "0.7rem", letterSpacing: "0.08em", color: "var(--green)",
+                }}>
+                  ↳ Refining {aiResult.total} {aiResult.total === 1 ? "result" : "results"} — type to narrow further
+                </span>
+                <button
+                  onClick={resetConversation}
+                  style={{
+                    background: "transparent", border: "none",
+                    fontFamily: "var(--font-dm-mono), monospace",
+                    fontSize: "0.65rem", letterSpacing: "0.08em",
+                    color: "#aaa", cursor: "pointer", textDecoration: "underline",
+                  }}
+                >
+                  Start over
+                </button>
+              </div>
+            )}
+
             {/* Search input */}
             <form
               onSubmit={(e) => { e.preventDefault(); handleAISearch(); }}
@@ -187,7 +237,7 @@ export default function SearchPage() {
                 borderRadius: "3px",
                 overflow: "hidden",
                 boxShadow: "0 2px 20px rgba(26,77,26,0.1)",
-                border: "1.5px solid rgba(51,153,51,0.2)",
+                border: isConversation ? "1.5px solid rgba(51,153,51,0.4)" : "1.5px solid rgba(51,153,51,0.2)",
               }}
             >
               <input
@@ -195,7 +245,7 @@ export default function SearchPage() {
                 type="text"
                 value={aiQuery}
                 onChange={(e) => setAiQuery(e.target.value)}
-                placeholder="Describe what you're looking for in plain English…"
+                placeholder={isConversation ? "Refine further… or ask something new" : "Describe what you're looking for in plain English…"}
                 style={{
                   flex: 1,
                   border: "none",
