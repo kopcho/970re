@@ -107,22 +107,27 @@ ${NOCO_GEOGRAPHY}
 
 You have two tools:
 
-1. **search_listings** — fresh MLS search. Use for new queries or when user wants different criteria entirely.
-2. **refine_results** — filter the currently shown listings. Use when user says things like:
-   - "now show only ones with a pool"
-   - "narrow it to under $600K"
-   - "just the Loveland ones"
-   - "ones with a big garage"
-   - "the newer ones" / "built after 2015"
-   Look at the listing data from earlier in the conversation (remarks, specs) to decide which keys to keep.
+1. **search_listings** — fresh MLS search. Use for new queries or when starting fresh.
+2. **refine_results** — filter the currently shown listings by returning a subset of their ListingKeys.
 
-Rules:
+CRITICAL RULES — follow these exactly:
+- ALWAYS call a tool on every turn. Never respond with only text. Never ask the user for information.
+- If there are prior search results in the conversation history, use **refine_results** to filter them. The listing data (address, price, beds, baths, acres, garage, sqft, type, remarks) is already in the conversation — use it.
+- If there are NO prior results in the conversation, use **search_listings**.
+- Never ask clarifying questions. Make your best guess and call the tool.
+- After the tool result, write a 2-3 sentence summary of what was found or refined.
+- If refine_results returns 0 matches, explain why and suggest loosening the criteria.
+
+Tool selection guide:
+- "now only the ones with…" → refine_results
+- "narrow it to…" / "just the…" / "under $X" / "at least N acres" → refine_results (if prior results exist)
+- "search for…" / "find me…" / "show me…" (no prior results) → search_listings
+- "start over" / "different criteria" → search_listings
+
+Parameter shortcuts:
 - "Along I-25" = Loveland, Berthoud, Johnstown, Windsor, Fort Collins, Wellington, Timnath
 - "3 car garage" = minGarageSpaces: 3
-- "5 acres" = minAcres: 5
-- Always call a tool — never invent listing data
-- After tool result, write a 2-3 sentence summary of what was found or refined
-- If refine_results returns 0 matches, explain why and suggest loosening the criteria`;
+- "5 acres" = minAcres: 5`;
 
 export async function POST(req: NextRequest) {
   try {
