@@ -30,7 +30,7 @@ export default function Footer() {
           lineHeight: 1.6,
         }}
       >
-        © 2025 970.re · Rich Kopcho, Broker<br />
+        © {new Date().getFullYear()} 970.re · Rich Kopcho, Broker<br />
         Better Homes &amp; Gardens Real Estate — Neuhaus · Loveland, CO
       </div>
 
