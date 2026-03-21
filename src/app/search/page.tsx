@@ -64,6 +64,11 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Warm the MLS cache as soon as the page loads
+  useEffect(() => {
+    fetch("/api/listings?city=all&page=1").catch(() => {});
+  }, []);
+
   // AI search handler
   const handleAISearch = async (queryOverride?: string) => {
     const q = queryOverride ?? aiQuery;
@@ -260,22 +265,43 @@ export default function SearchPage() {
               </div>
             )}
 
-            {/* AI loading state */}
+            {/* AI loading state — skeleton grid */}
             {aiLoading && (
-              <div style={{
-                marginTop: "3rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.75rem",
-                color: "#888",
-                fontFamily: "var(--font-dm-mono), monospace",
-                fontSize: "0.8rem",
-                letterSpacing: "0.08em",
-              }}>
-                <span className="ai-spinner" />
-                Searching the 970 MLS…
+              <div style={{ marginTop: "2rem", paddingBottom: "4rem" }}>
+                {/* Pulsing status line */}
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  color: "#888",
+                  fontFamily: "var(--font-dm-mono), monospace",
+                  fontSize: "0.8rem",
+                  letterSpacing: "0.08em",
+                  marginBottom: "2rem",
+                }}>
+                  <span className="ai-spinner" />
+                  Searching the 970 MLS…
+                </div>
+                {/* Skeleton cards */}
+                <div className="search-grid">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="skeleton-card">
+                      <div className="skeleton-img" />
+                      <div style={{ padding: "1.25rem", background: "#fff", border: "1px solid rgba(51,153,51,0.1)", borderTop: "none" }}>
+                        <div className="skeleton-line" style={{ width: "60%", height: 24, marginBottom: "0.5rem" }} />
+                        <div className="skeleton-line" style={{ width: "85%", height: 14, marginBottom: "0.75rem" }} />
+                        <div style={{ display: "flex", gap: "1rem" }}>
+                          <div className="skeleton-line" style={{ width: 40, height: 12 }} />
+                          <div className="skeleton-line" style={{ width: 40, height: 12 }} />
+                          <div className="skeleton-line" style={{ width: 60, height: 12 }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
+
 
             {/* AI error */}
             {aiError && (
@@ -501,6 +527,23 @@ export default function SearchPage() {
           animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .skeleton-card {
+          border-radius: 3px;
+          overflow: hidden;
+        }
+        .skeleton-img {
+          height: 220px;
+          background: linear-gradient(90deg, #e0ebe0 25%, #edf4ed 50%, #e0ebe0 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.4s infinite;
+        }
+        .skeleton-line {
+          border-radius: 2px;
+          background: linear-gradient(90deg, #e8ede8 25%, #f2f5f2 50%, #e8ede8 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.4s infinite;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         @media (max-width: 1100px) { .search-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 700px) { .search-grid { grid-template-columns: 1fr; } }
         @media (max-width: 900px) {

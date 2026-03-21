@@ -61,9 +61,12 @@ interface SearchParams {
   status?: string;
 }
 
-async function executeSearch(params: SearchParams): Promise<MLSListing[]> {
+async function executeSearch(
+  params: SearchParams,
+  prefetched?: Promise<MLSListing[]>
+): Promise<MLSListing[]> {
   const status = params.status || "Active";
-  const all = await fetchMLSListings({ status, withMedia: true, top: 200 });
+  const all = await (prefetched ?? fetchMLSListings({ status, withMedia: true, top: 200 }));
 
   // City filter
   let filtered: MLSListing[];
@@ -123,6 +126,9 @@ export async function POST(req: NextRequest) {
     let searchResults: MLSListing[] = [];
     let searchParams: SearchParams = {};
 
+    // Kick off MLS fetch immediately — runs in parallel with Claude
+    const mlsPromise = fetchMLSListings({ status: "Active", withMedia: true, top: 200 });
+
     // Step 1: Ask Claude to parse the query and call the tool
     const messages: Anthropic.MessageParam[] = [
       { role: "user", content: query },
@@ -142,7 +148,8 @@ export async function POST(req: NextRequest) {
       if (!toolUse || toolUse.name !== "search_listings") break;
 
       searchParams = toolUse.input as SearchParams;
-      searchResults = await executeSearch(searchParams);
+      // MLS data is already in-flight — await the shared promise instead of a new fetch
+      searchResults = await executeSearch(searchParams, mlsPromise);
 
       // Give Claude the results so it can write the summary
       messages.push({ role: "assistant", content: response.content });
